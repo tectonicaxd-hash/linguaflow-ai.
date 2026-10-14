@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#070B14">
+<title>LinguaFlow AI — Neon Language Translator</title>
+<style>
+:root{
+ --bg:#070B14;--bg2:#0C1222;--panel:#101A2E;--cyan:#00F5FF;--violet:#9D4EDD;--blue:#4776FF;
+ --green:#39FF88;--text:#F3F7FF;--muted:#9AA9C2;--border:rgba(0,245,255,.24);--error:#FF5C7A;
+ --radius:22px;--space:20px;--motion:1;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,"Segoe UI",system-ui,-apple-system,sans-serif;background:radial-gradient(ellipse at 15% 0%,rgba(71,118,255,.16),transparent 38%),radial-gradient(ellipse at 90% 30%,rgba(157,78,221,.12),transparent 34%),var(--bg);line-height:1.55;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;background-image:linear-gradient(rgba(0,245,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,255,.08) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(to bottom,black,transparent 90%);z-index:-1}
+body.no-motion *,body.no-motion *::before,body.no-motion *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+button:disabled{opacity:.45;cursor:not-allowed;transform:none!important}
+a{color:var(--cyan)}
+.shell{width:min(1440px,100%);padding:22px clamp(14px,3vw,42px) 32px;margin:auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 0 22px;border-bottom:1px solid rgba(154,169,194,.13)}
+.brand{display:flex;align-items:center;gap:13px;min-width:0}
+.logo{width:48px;height:48px;flex:none;filter:drop-shadow(0 0 12px rgba(0,245,255,.32));animation:glow 4s ease-in-out infinite}
+.brand-name{font-size:clamp(1rem,2.2vw,1.3rem);font-weight:900;letter-spacing:.09em;line-height:1.2}
+.brand-sub{font-size:.67rem;color:var(--muted);letter-spacing:.12em;margin-top:4px}
+.top-actions{display:flex;align-items:center;gap:10px}
+.status-pill,.feature-pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:999px;padding:8px 12px;font-size:.72rem;letter-spacing:.07em;color:#d8faff;background:rgba(0,245,255,.055)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);display:inline-block}
+.icon-btn,.btn,.select-like{border:1px solid var(--border);background:rgba(16,26,46,.88);color:var(--text);border-radius:12px;padding:10px 13px;transition:transform .18s,border-color .18s,box-shadow .18s}
+.icon-btn:hover,.btn:hover,.select-like:hover{transform:translateY(-2px);border-color:var(--cyan);box-shadow:0 7px 22px rgba(0,245,255,.1)}
+.hero{padding:34px 0 26px;text-align:center}
+.eyebrow{color:var(--cyan);font-size:.72rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
+h1{font-size:clamp(2rem,5vw,4.2rem);line-height:1.08;letter-spacing:-.045em;margin:12px 0;background:linear-gradient(100deg,#fff 15%,#9dfaff 48%,#b9a4ff 85%);background-clip:text;-webkit-background-clip:text;color:transparent}
+.hero p{color:var(--muted);max-width:720px;margin:0 auto 20px;font-size:clamp(.94rem,2vw,1.08rem)}
+.feature-row{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:stretch}
+.panel,.section-card{background:linear-gradient(145deg,rgba(16,26,46,.94),rgba(10,17,32,.94));border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 15px 45px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.035);padding:clamp(16px,2.3vw,25px);min-width:0;position:relative}
+.panel::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(135deg,rgba(0,245,255,.04),transparent 35%,rgba(157,78,221,.035));}
+.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:15px;position:relative}
+.kicker{font-size:.7rem;letter-spacing:.15em;color:var(--cyan);font-weight:800}
+h2,h3{margin:0}
+.panel h2{font-size:1.1rem;letter-spacing:.01em}
+.sub{color:var(--muted);font-size:.85rem;margin:4px 0 0}
+textarea{width:100%;resize:vertical;min-height:230px;max-height:560px;background:rgba(4,9,20,.72);border:1px solid rgba(154,169,194,.22);border-radius:15px;padding:17px;color:var(--text);line-height:1.7;outline:none;transition:border-color .2s,box-shadow .2s;position:relative}
+textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,245,255,.08),0 0 22px rgba(0,245,255,.07)}
+textarea::placeholder{color:#6f819e}
+.editor-meta{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:.76rem;margin:8px 2px 16px;flex-wrap:wrap}
+.row{display:flex;gap:10px;align-items:center}
+.lang-block{margin:15px 0}
+.field-label{display:block;font-size:.72rem;letter-spacing:.1em;color:#c7d7f1;font-weight:800;margin-bottom:7px}
+select,input[type="search"]{width:100%;color:var(--text);background:#0a1120;border:1px solid rgba(154,169,194,.24);border-radius:12px;padding:12px;min-width:0}
+select option{background:#0a1120;color:var(--text)}
+.lang-row{display:grid;grid-template-columns:minmax(0,1fr) 46px minmax(0,1fr);gap:10px;align-items:end}
+.swap{width:44px;height:44px;border-radius:50%;font-size:1.25rem;color:var(--cyan);padding:0;margin-bottom:1px}
+.small-note{color:var(--muted);font-size:.77rem;margin-top:7px}
+.detect-card{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid rgba(154,169,194,.15);border-radius:12px;padding:10px 12px;background:rgba(4,9,20,.42);margin-top:8px}
+.detect-title{font-size:.66rem;color:var(--muted);letter-spacing:.12em;font-weight:800}
+.detect-value{font-size:.9rem;font-weight:700}
+#detectState{font-size:.72rem;color:var(--muted);text-align:right}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+.btn{font-size:.82rem;font-weight:750;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.primary{border:0;color:#03101c;background:linear-gradient(105deg,var(--cyan),#6a9cff);box-shadow:0 7px 25px rgba(0,245,255,.15);padding:13px 18px}
+.primary:hover{box-shadow:0 8px 30px rgba(0,245,255,.27)}
+.grow{flex:1}
+.message{font-size:.82rem;margin-top:12px;min-height:1.4em;color:var(--muted)}
+.message.error{color:var(--error)}.message.success{color:var(--green)}
+.output-area{min-height:230px;white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;background:rgba(4,9,20,.52);border:1px solid rgba(154,169,194,.16);border-radius:15px;padding:17px;line-height:1.8;font-size:1rem;position:relative}
+.empty{min-height:195px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--muted);gap:9px}
+.empty-icon{font-size:2.3rem;filter:drop-shadow(0 0 10px rgba(0,245,255,.4))}
+.empty strong{color:#dce9ff}
+.result-meta{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;color:var(--muted);font-size:.75rem}
+.meta-chip{padding:5px 9px;border-radius:8px;background:rgba(0,245,255,.06);border:1px solid rgba(0,245,255,.13)}
+.quick{margin-top:18px}
+.quick-title{font-size:.72rem;letter-spacing:.13em;color:var(--muted);font-weight:800;margin-bottom:10px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 1px 8px;scrollbar-width:thin;scrollbar-color:#344764 transparent}
+.chip{flex:none;border:1px solid rgba(154,169,194,.2);border-radius:999px;background:#0c1425;color:#c7d7f1;padding:8px 12px;font-size:.78rem}
+.chip.active{border-color:var(--cyan);color:var(--cyan);background:rgba(0,245,255,.09);box-shadow:0 0 14px rgba(0,245,255,.08)}
+.section{margin-top:30px}
+.section-title{text-align:center;margin-bottom:18px}
+.section-title h2{font-size:clamp(1.25rem,3vw,1.8rem);margin:7px 0}
+.section-title p{color:var(--muted);margin:0;font-size:.9rem}
+.history-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.history-item{padding:13px;border:1px solid rgba(154,169,194,.17);border-radius:13px;background:rgba(4,9,20,.4);text-align:left;color:var(--text);min-width:0}
+.history-item:hover{border-color:var(--cyan)}
+.history-item strong{display:block;font-size:.82rem;overflow-wrap:anywhere}
+.history-item span{display:block;font-size:.74rem;color:var(--muted);margin-top:5px;overflow-wrap:anywhere}
+.workflow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.step{border:1px solid rgba(0,245,255,.16);border-radius:15px;padding:17px;background:rgba(5,12,25,.5)}
+.step-number{font-size:.68rem;letter-spacing:.15em;color:var(--cyan);font-weight:900}
+.step h3{font-size:.96rem;margin:8px 0}
+.step p{font-size:.82rem;color:var(--muted);margin:0}
+.info-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+.info-copy{color:var(--muted);font-size:.9rem;margin:8px 0 0}
+.creators{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.creator{padding:12px 8px;text-align:center;border:1px solid rgba(157,78,221,.25);border-radius:12px;background:rgba(157,78,221,.07)}
+.creator .symbol{color:var(--cyan);font-size:1.25rem}
+.creator strong{display:block;font-size:.8rem;letter-spacing:.05em}
+.creator span{font-size:.7rem;color:var(--muted)}
+.privacy{font-size:.77rem;color:var(--muted);border-left:2px solid var(--violet);padding-left:12px;margin-top:14px}
+footer{text-align:center;margin:30px auto 0;padding:20px 10px;border-top:1px solid rgba(154,169,194,.14);color:var(--muted);font-size:.77rem}
+.footer-legend{color:var(--cyan);font-weight:900;letter-spacing:.1em;font-size:.82rem}
+.footer-names{color:var(--text);letter-spacing:.1em;font-weight:750;margin:5px 0}
+dialog{border:1px solid var(--border);border-radius:18px;color:var(--text);background:#0c1425;padding:0;width:min(520px,calc(100% - 28px));box-shadow:0 20px 70px #000}
+dialog::backdrop{background:rgba(0,0,0,.7);backdrop-filter:blur(4px)}
+.dialog-content{padding:22px}
+.dialog-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.setting-row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid rgba(154,169,194,.12)}
+.setting-row label{font-size:.88rem}
+.setting-row small{display:block;color:var(--muted);font-size:.74rem}
+.toggle{accent-color:var(--cyan);width:18px;height:18px}
+.spinner{width:15px;height:15px;border:2px solid rgba(3,16,28,.25);border-top-color:#03101c;border-radius:50%;display:inline-block;animation:spin .8s linear infinite}
+[hidden]{display:none!important}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 7px rgba(0,245,255,.25))}50%{filter:drop-shadow(0 0 15px rgba(157,78,221,.55))}}
+@media(max-width:900px){.workspace{grid-template-columns:1fr}.workflow{grid-template-columns:repeat(2,minmax(0,1fr))}.info-grid{grid-template-columns:1fr}.output-area{min-height:180px}}
+@media(max-width:540px){.shell{padding:13px 12px 24px}.topbar{align-items:flex-start}.status-pill{display:none}.brand-sub{font-size:.57rem}.logo{width:40px;height:40px}.hero{padding:26px 0 21px}.panel{padding:15px;border-radius:17px}.lang-row{grid-template-columns:minmax(0,1fr) 40px minmax(0,1fr);gap:6px}.swap{width:38px;height:42px}.lang-row select{padding:10px 7px;font-size:.82rem}.actions .btn{flex:1}.actions .primary{flex-basis:100%}.history-list{grid-template-columns:1fr}.workflow{grid-template-columns:1fr 1fr}.step{padding:13px}.creators{gap:6px}.creator{padding:10px 3px}.creator strong{font-size:.7rem}.editor-meta{font-size:.71rem}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="topbar">
+ <div class="brand">
+  <svg class="logo" viewBox="0 0 64 64" role="img" aria-label="LinguaFlow globe logo">
+   <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#00F5FF"/><stop offset="1" stop-color="#9D4EDD"/></linearGradient></defs>
+   <circle cx="32" cy="32" r="25" fill="none" stroke="url(#lg)" stroke-width="2.5"/>
+   <ellipse cx="32" cy="32" rx="11" ry="25" fill="none" stroke="url(#lg)" stroke-width="1.5"/>
+   <path d="M8 25h48M8 39h48" stroke="url(#lg)" stroke-width="1.5"/>
+   <path d="M24 17v21h15" fill="none" stroke="#F3F7FF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+   <path d="M14 11l-4-4M50 12l4-4M32 4v-2" stroke="#00F5FF" stroke-width="2" stroke-linecap="round"/>
+   <path d="M20 56l-3 4 6-1M44 56l3 4-6-1" fill="none" stroke="#9D4EDD" stroke-width="2"/>
+  </svg>
+  <div><div class="brand-name">LINGUAFLOW <span style="color:var(--cyan)">AI</span></div><div class="brand-sub">INTELLIGENT LANGUAGE TRANSLATOR</div></div>
+ </div>
+ <div class="top-actions"><span class="status-pill"><i class="dot"></i> TRANSLATION ENGINE</span><button class="icon-btn" id="settingsOpen" aria-label="Open settings" title="Settings">⚙</button></div>
+</header>
+
+<section class="hero">
+ <div class="eyebrow">A student-built AI project</div>
+ <h1>Every Language.<br>One Connection.</h1>
+ <p>Translate your thoughts across the world with an intelligent, easy-to-use multilingual translation experience.</p>
+ <div class="feature-row"><span class="feature-pill">🌐 MULTILINGUAL</span><span class="feature-pill">⚡ INSTANT WORKFLOW</span><span class="feature-pill">🧠 AI-POWERED</span></div>
+</section>
+
+<main>
+ <section class="workspace" aria-label="Translation workspace">
+  <article class="panel">
+   <div class="panel-head"><div><div class="kicker">01 / SOURCE MESSAGE</div><h2>Write your message</h2><p class="sub">Enter the text you want to translate.</p></div><span aria-hidden="true">✎</span></div>
+   <textarea id="sourceText" maxlength="5000" aria-label="Text to translate" placeholder="Type or paste your message here... Try something in English, Hindi, Telugu, Arabic, French, or another language."></textarea>
+   <div class="editor-meta"><span id="charCount">0 / 5000 characters</span><span id="wordCount">0 words</span></div>
+   <div class="row" style="justify-content:space-between;flex-wrap:wrap"><button class="btn" id="exampleBtn" type="button">✦ INSERT EXAMPLE</button><button class="btn" id="clearSourceBtn" type="button">CLEAR INPUT</button></div>
+   <div class="lang-block">
+    <label class="field-label" for="sourceLang">SOURCE LANGUAGE</label>
+    <select id="sourceLang" aria-label="Source language">
+     <option value="auto">Auto Detect</option>
+    </select>
+    <div class="detect-card"><div><div class="detect-title">DETECTED SOURCE LANGUAGE</div><div class="detect-value" id="detectedName">Waiting for text...</div></div><div id="detectState" aria-live="polite">Automatic detection enabled</div></div>
+    <div class="small-note" id="detectNote">Detection is provided by your configured translation service when supported.</div>
+   </div>
+   <div class="lang-block">
+    <div class="lang-row">
+     <div><label class="field-label" for="targetLang">02 / TRANSLATE INTO</label><select id="targetLang" aria-label="Destination language"></select></div>
+     <button class="icon-btn swap" id="swapBtn" type="button" aria-label="Swap source and target languages" title="Swap languages">⇄</button>
+     <div><label class="field-label" for="targetSearch">FIND LANGUAGE</label><input id="targetSearch" type="search" placeholder="Search name or code…" aria-label="Search target languages"></div>
+    </div>
+    <div class="small-note">Choose a destination language. Provider support depends on the endpoint you configure.</div>
+   </div>
+   <div class="quick"><div class="quick-title">QUICK DESTINATIONS</div><div class="chips" id="quickChips"></div></div>
+   <div class="actions"><button class="btn primary grow" id="translateBtn" type="button">⚡ TRANSLATE NOW</button></div>
+   <div id="sourceMessage" class="message" role="status" aria-live="polite">Ready to translate. Online translation uses a community-hosted service; availability may vary.</div>
+  </article>
+
+  <article class="panel">
+   <div class="panel-head"><div><div class="kicker">03 / TRANSLATED OUTPUT</div><h2>Your translation</h2><p class="sub">Your translated message appears here.</p></div><span aria-hidden="true">✧</span></div>
+   <div class="output-area" id="outputArea" aria-live="polite" aria-atomic="true"><div class="empty" id="emptyState"><div class="empty-icon">🌐</div><strong>Your translation will appear here.</strong><span>Enter a message and select a destination language.</span></div><div id="outputText" dir="auto" hidden></div></div>
+   <div class="result-meta" id="resultMeta" hidden></div>
+   <div class="editor-meta"><span id="outputWords">0 translated words</span><span id="durationText">Response time: —</span></div>
+   <div class="actions">
+    <button class="btn" id="copyBtn" type="button" disabled>▣ COPY</button>
+    <button class="btn" id="listenBtn" type="button" disabled>▶ LISTEN</button>
+    <button class="btn" id="stopBtn" type="button" hidden>■ STOP</button>
+    <button class="btn" id="downloadBtn" type="button" disabled>↓ DOWNLOAD TXT</button>
+    <button class="btn" id="shareBtn" type="button" disabled hidden>↗ SHARE</button>
+    <button class="btn" id="clearResultBtn" type="button">CLEAR RESULT</button>
+   </div>
+   <div id="outputMessage" class="message" role="status" aria-live="polite">Translation output is waiting for your first successful request.</div>
+   <div class="privacy">🔒 Privacy note: text is sent only to the translation endpoint you configure. Review that provider’s privacy policy before sending personal or sensitive content.</div>
+  </article>
+ </section>
+
+ <section class="section section-card">
+  <div class="section-title"><div class="eyebrow">Your workspace memory</div><h2>RECENT TRANSLATIONS</h2><p>Up to five successful translations, kept in this page session only.</p></div>
+  <div class="history-list" id="historyList"><div class="small-note">Your successful translations will appear here.</div></div>
+  <div class="actions" style="justify-content:center"><button class="btn" id="clearHistoryBtn" type="button">CLEAR HISTORY</button></div>
+ </section>
+
+ <section class="section">
+  <div class="section-title"><div class="eyebrow">Behind the experience</div><h2>HOW LINGUAFLOW WORKS</h2><p>From human language to meaningful communication.</p></div>
+  <div class="workflow">
+   <article class="step"><div class="step-number">STEP 01</div><h3>⌨ INPUT</h3><p>The user enters a sentence or paragraph in the source text area.</p></article>
+   <article class="step"><div class="step-number">STEP 02</div><h3>🌐 LANGUAGE DETECTION</h3><p>The translation provider identifies the source language when detection is supported.</p></article>
+   <article class="step"><div class="step-number">STEP 03</div><h3>🧠 MACHINE TRANSLATION</h3><p>The app sends text and language settings to a translation service that generates translated output.</p></article>
+   <article class="step"><div class="step-number">STEP 04</div><h3>✨ OUTPUT</h3><p>The translated text appears here, ready to copy, listen to, or download.</p></article>
+  </div>
+  <p class="privacy">Language detection and machine translation are AI-related technologies. Accuracy varies with language, context, sentence structure, and provider. This front end does not train an AI model itself.</p>
+ </section>
+
+ <section class="section info-grid">
+  <article class="section-card">
+   <div class="eyebrow">About the project</div><h2 style="margin-top:7px">A small project with a global idea.</h2>
+   <p class="info-copy">LinguaFlow AI is a student-created multilingual translation interface developed as part of an Artificial Intelligence holiday homework project. It demonstrates how language detection, machine translation services, user interface design, and browser technologies can work together to support communication across languages.</p>
+   <div class="creators">
+    <div class="creator"><div class="symbol">△</div><strong>AMIN</strong><span>Co-Creator</span></div>
+    <div class="creator"><div class="symbol">◇</div><strong>THEERDHA</strong><span>Co-Creator</span></div>
+    <div class="creator"><div class="symbol">▽</div><strong>ABHAY</strong><span>Co-Creator</span></div>
+   </div>
+  </article>
+  <article class="section-card">
+   <div class="eyebrow">Engine status</div><h2 style="margin-top:7px">Transparent by design.</h2>
+   <p class="info-copy" id="providerSummary">Provider: LibreTranslate-compatible API<br>Endpoint: not configured<br>Online translation: unavailable until configured</p>
+   <p class="privacy">This is a single-file front end. Real translation requires a compatible online endpoint with browser CORS access. Some providers require a server-side proxy. Never put a private API key in a public HTML file.</p>
+   <button class="btn" id="settingsOpen2" type="button" style="margin-top:12px">⚙ PROVIDER SETTINGS</button>
+  </article>
+ </section>
+</main>
+<footer>
+ <div class="footer-legend">⚡ MADE BY THE THREE LEGENDS ⚡</div>
+ <div class="footer-names">AMIN • THEERDHA • ABHAY</div>
+ <div>AI HOLIDAY HOMEWORK PROJECT</div>
+ <div style="margin-top:9px;color:#6f819e">⚡ THREE MINDS. ONE PROJECT. LIMITLESS POSSIBILITIES. ⚡</div>
+</footer>
+</div>
+
+<dialog id="settingsDialog" aria-labelledby="settingsTitle">
+ <div class="dialog-content">
+  <div class="dialog-head"><div><div class="eyebrow">Configuration</div><h2 id="settingsTitle">LINGUAFLOW SETTINGS</h2></div><button class="icon-btn" id="settingsClose" aria-label="Close settings">✕</button></div>
+  <div class="setting-row"><div><label for="motionToggle">Reduce background animation</label><small>Turn off decorative motion effects.</small></div><input class="toggle" id="motionToggle" type="checkbox"></div>
+  <div class="setting-row"><div><label for="compactToggle">Compact spacing</label><small>Use a tighter layout on this device.</small></div><input class="toggle" id="compactToggle" type="checkbox"></div>
+  <div class="setting-row"><div><strong>Provider</strong><small>LibreTranslate-compatible API</small></div><span id="providerStatus" class="small-note">Not configured</span></div>
+  <p class="small-note">To configure: edit <code>TRANSLATION_CONFIG</code> near the top of the JavaScript. Set an endpoint such as your own LibreTranslate deployment URL. The expected endpoint is the API base URL; the app appends <code>/translate</code> and <code>/detect</code>. Do not place secret API keys in public HTML.</p>
+  <p class="small-note">Settings panel options affect only the interface. Source text and history are not saved to localStorage.</p>
+  <div class="actions"><button class="btn primary grow" id="settingsDone" type="button">DONE</button></div>
+ </div>
+</dialog>
+
+<script>
+"use strict";
+
+/*
+ * LINGUAFLOW AI — provider configuration
+ * This file intentionally ships with an empty endpoint so it does not silently
+ * rely on an unstable public demo service. Configure your own CORS-enabled
+ * LibreTranslate-compatible deployment. The app appends /translate and /detect.
+ * For providers with secret credentials, use a server-side proxy instead.
+ */
+const TRANSLATION_CONFIG = {
+  provider: "LibreTranslate Germany community instance (best-effort)",
+  endpoint: "https://libretranslate.de", // Community-hosted; availability and browser access may vary.
+  apiKey: ""    // Never put private API keys in public HTML.
+};
+
+const LANGUAGES = [
+ {code:"en",name:"English",native:"English",tag:"en"},
+ {code:"hi",name:"Hindi",native:"हिन्दी",tag:"hi"},
+ {code:"te",name:"Telugu",native:"తెలుగు",tag:"te"},
+ {code:"ta",name:"Tamil",native:"தமிழ்",tag:"ta"},
+ {code:"bn",name:"Bengali",native:"বাংলা",tag:"bn"},
+ {code:"mr",name:"Marathi",native:"मराठी",tag:"mr"},
+ {code:"gu",name:"Gujarati",native:"ગુજરાતી",tag:"gu"},
+ {code:"kn",name:"Kannada",native:"ಕನ್ನಡ",tag:"kn"},
+ {code:"ml",name:"Malayalam",native:"മലയാളം",tag:"ml"},
+ {code:"pa",name:"Punjabi",native:"ਪੰਜਾਬੀ",tag:"pa"},
+ {code:"ur",name:"Urdu",native:"اردو",tag:"ur",rtl:true},
+ {code:"ar",name:"Arabic",native:"العربية",tag:"ar",rtl:true},
+ {code:"fr",name:"French",native:"Français",tag:"fr"},
+ {code:"es",name:"Spanish",native:"Español",tag:"es"},
+ {code:"de",name:"German",native:"Deutsch",tag:"de"},
+ {code:"pt",name:"Portuguese",native:"Português",tag:"pt"},
+ {code:"it",name:"Italian",native:"Italiano",tag:"it"},
+ {code:"ru",name:"Russian",native:"Русский",tag:"ru"},
+ {code:"ja",name:"Japanese",native:"日本語",tag:"ja"},
+ {code:"ko",name:"Korean",native:"한국어",tag:"ko"},
+ {code:"zh",name:"Chinese (Simplified)",native:"简体中文",tag:"zh"},
+ {code:"id",name:"Indonesian",native:"Bahasa Indonesia",tag:"id"},
+ {code:"ms",name:"Malay",native:"Bahasa Melayu",tag:"ms"},
+ {code:"th",name:"Thai",native:"ไทย",tag:"th"},
+ {code:"vi",name:"Vietnamese",native:"Tiếng Việt",tag:"vi"},
+ {code:"tr",name:"Turkish",native:"Türkçe",tag:"tr"},
+ {code:"nl",name:"Dutch",native:"Nederlands",tag:"nl"},
+ {code:"el",name:"Greek",native:"Ελληνικά",tag:"el"},
+ {code:"pl",name:"Polish",native:"Polski",tag:"pl"},
+ {code:"sw",name:"Swahili",native:"Kiswahili",tag:"sw"},
+ {code:"fa",name:"Persian",native:"فارسی",tag:"fa",rtl:true},
+ {code:"uk",name:"Ukrainian",native:"Українська",tag:"uk"},
+ {code:"he",name:"Hebrew",native:"עברית",tag:"he",rtl:true},
+ {code:"ne",name:"Nepali",native:"नेपाली",tag:"ne"},
+ {code:"si",name:"Sinhala",native:"සිංහල",tag:"si"}
+];
+
+const $ = id => document.getElementById(id);
+const sourceText = $("sourceText"), sourceLang = $("sourceLang"), targetLang = $("targetLang");
+let lastTranslation = null, historyItems = [], detectionTimer = null, detectionController = null;
+let translationController = null, requestSequence = 0, translationStartedAt = 0, speaking = false;
+let lastDetected = null, lastSuccessfulSourceCode = null;
+
+function language(code){ return LANGUAGES.find(l => l.code === code) || null; }
+function escapeText(s){ return String(s ?? ""); }
+function setMessage(el, text, type=""){ el.textContent=text; el.className="message"+(type?" "+type:""); }
+function wordCount(s){ const t=s.trim(); return t ? t.split(/\s+/u).length : 0; }
+function fillLanguages(){
+  LANGUAGES.forEach(l=>{
+    const a=document.createElement("option");a.value=l.code;a.textContent=`${l.name} — ${l.native} (${l.code})`;sourceLang.appendChild(a);
+    const b=document.createElement("option");b.value=l.code;b.textContent=`${l.name} — ${l.native} (${l.code})`;targetLang.appendChild(b);
+  });
+  targetLang.value="hi";
+}
+function renderChips(){
+ const picks=[["hi","🇮🇳 Hindi"],["te","🇮🇳 Telugu"],["ta","🇮🇳 Tamil"],["en","🇬🇧 English"],["fr","🇫🇷 French"],["es","🇪🇸 Spanish"],["ja","🇯🇵 Japanese"],["ar","🌙 Arabic"]];
+ const host=$("quickChips");host.replaceChildren();
+ picks.forEach(([code,label])=>{const b=document.createElement("button");b.type="button";b.className="chip";b.textContent=label;b.dataset.code=code;b.addEventListener("click",()=>{targetLang.value=code;updateChips();});host.appendChild(b);});
+ updateChips();
+}
+function updateChips(){document.querySelectorAll(".chip").forEach(b=>b.classList.toggle("active",b.dataset.code===targetLang.value));}
+function updateCounts(){
+ const n=sourceText.value.length;$("charCount").textContent=`${n.toLocaleString()} / 5000 characters`;
+ $("wordCount").textContent=`${wordCount(sourceText.value)} words`;
+ if(n>=5000)setMessage($("sourceMessage"),"Character limit reached (5000).","error");
+}
+function filterTargetLanguages(){
+ const q=$("targetSearch").value.trim().toLocaleLowerCase();
+ const current=targetLang.value;
+ Array.from(targetLang.options).forEach(o=>{const l=language(o.value);o.hidden=!!q && !!l && !`${l.name} ${l.native} ${l.code}`.toLocaleLowerCase().includes(q);});
+ if(targetLang.selectedOptions[0]?.hidden){const visible=Array.from(targetLang.options).find(o=>!o.hidden);if(visible)targetLang.value=visible.value;}
+ else if(current)targetLang.value=current;
+ updateChips();
+}
+function configReady(){return Boolean(TRANSLATION_CONFIG.endpoint.trim());}
+function endpoint(path){return TRANSLATION_CONFIG.endpoint.trim().replace(/\/+$/,"")+"/"+path;}
+function updateProviderStatus(){
+ const configured=configReady();
+ $("providerStatus").textContent=configured?"Endpoint configured":"Not configured";
+ $("providerSummary").innerHTML="";
+ const lines=[
+ `Provider: ${TRANSLATION_CONFIG.provider}`,
+ `Endpoint: ${configured ? TRANSLATION_CONFIG.endpoint.trim() : "not configured"}`,
+ `Online translation: ${configured ? "configured (connectivity not yet verified)" : "unavailable until configured"}`
+ ];
+ lines.forEach((line,i)=>{if(i)$("providerSummary").appendChild(document.createElement("br"));$("providerSummary").appendChild(document.createTextNode(line));});
+}
+function languageName(code){const l=language(code);return l?`${l.name} (${l.code})`:code||"Unknown";}
+function renderDetection(data, manual=false){
+ if(manual){const l=language(sourceLang.value);$("detectedName").textContent=l?`${l.name} (${l.code})`:"Waiting for text...";$("detectState").textContent="Manual source language selected";return;}
+ if(data){lastDetected=data;const code=data.language||data.code||"";$("detectedName").textContent=code?languageName(code):"Language detected";$("detectState").textContent=Number.isFinite(data.confidence)?`Confidence: ${Math.round(data.confidence*100)}%`:"Provider detection";$("detectNote").textContent="Detection result returned by the configured provider.";}
+ else{$("detectedName").textContent="Language detection unavailable";$("detectState").textContent="Could not detect";$("detectNote").textContent="You can choose the source language manually or use provider auto-detection during translation.";}
+}
+async function detectLanguage(text){
+ if(!configReady())return null;
+ if(text.trim().length<4)return null;
+ if(detectionController)detectionController.abort();
+ detectionController=new AbortController();
+ const timer=setTimeout(()=>detectionController?.abort(),8000);
+ try{
+  const payload={q:text};
+  if(TRANSLATION_CONFIG.apiKey)payload.api_key=TRANSLATION_CONFIG.apiKey;
+  const res=await fetch(endpoint("detect"),{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:new URLSearchParams(payload),signal:detectionController.signal});
+  if(!res.ok)throw new Error(`Detection HTTP ${res.status}`);
+  const data=await res.json();const item=Array.isArray(data)?data[0]:data;
+  if(item && (item.language||item.code))return item;
+  return null;
+ }catch(e){if(e.name!=="AbortError")console.info("Language detection unavailable:",e.message);return null;}
+ finally{clearTimeout(timer);}
+}
+function scheduleDetection(){
+ clearTimeout(detectionTimer);
+ if(detectionController)detectionController.abort();
+ if(sourceLang.value!=="auto"){renderDetection(null,true);return;}
+ lastDetected=null;
+ if(sourceText.value.trim().length<4){$("detectedName").textContent=sourceText.value.trim()?"Add a little more text…":"Waiting for text...";$("detectState").textContent="Automatic detection enabled";return;}
+ $("detectedName").textContent="Detecting…";$("detectState").textContent="Waiting for provider";
+ detectionTimer=setTimeout(async()=>{
+   const snapshot=sourceText.value;
+   const result=await detectLanguage(snapshot);
+   if(snapshot!==sourceText.value || sourceLang.value!=="auto")return;
+   renderDetection(result);
+ },650);
+}
+function renderTranslation(result,meta){
+ $("emptyState").hidden=true;$("outputText").hidden=false;$("outputText").textContent=result;
+ const tgt=language(meta.target);const chips=[];
+ chips.push(`Translated into: ${tgt?tgt.name:meta.target}`);
+ chips.push(`Target code: ${meta.target}`);
+ if(meta.source)chips.push(`Detected from: ${languageName(meta.source)}`);
+ $("resultMeta").replaceChildren();
+ chips.forEach(s=>{const span=document.createElement("span");span.className="meta-chip";span.textContent=s;$("resultMeta").appendChild(span);});
+ $("resultMeta").hidden=false;$("outputWords").textContent=`${wordCount(result)} translated words`;
+ $("copyBtn").disabled=false;$("listenBtn").disabled=false;$("downloadBtn").disabled=false;
+ if(navigator.share)$("shareBtn").hidden=false;
+}
+async function translateText(text,source,target,signal){
+ if(!configReady())throw new Error("CONFIG");
+ const payload={q:text,source:source==="auto"?"auto":source,target:target,format:"text"};
+ if(TRANSLATION_CONFIG.apiKey)payload.api_key=TRANSLATION_CONFIG.apiKey;
+ const controllerTimer=setTimeout(()=>{if(!signal.aborted)translationController?.abort();},20000);
+ try{
+  const res=await fetch(endpoint("translate"),{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:new URLSearchParams(payload),signal});
+  if(!res.ok){
+   if(res.status===400)throw new Error("PAIR");
+   if(res.status===401||res.status===403)throw new Error("AUTH");
+   if(res.status===429)throw new Error("RATE");
+   if(res.status>=500)throw new Error("SERVICE");
+   throw new Error("HTTP");
+  }
+  let data;try{data=await res.json();}catch{throw new Error("BADJSON");}
+  if(typeof data.translatedText!=="string")throw new Error("BADRESPONSE");
+  return {text:data.translatedText,detected:data.detectedLanguage?.language||data.detectedLanguage?.code||null};
+ }finally{clearTimeout(controllerTimer);}
+}
+function errorMessage(e){
+ if(e.message==="CONFIG")return "The translation service is not configured or is unavailable. Check your connection and try again.";
+ if(e.message==="PAIR")return "The provider rejected this language pair or request. Check supported languages and source/target codes.";
+ if(e.message==="AUTH")return "The provider rejected authentication. Check your endpoint or API configuration.";
+ if(e.message==="RATE")return "The service rate limit was reached. Wait a moment, then retry.";
+ if(e.message==="SERVICE")return "The translation service is temporarily unavailable. Please try again.";
+ if(e.message==="BADJSON"||e.message==="BADRESPONSE")return "The translation service returned an unexpected response.";
+ if(e.name==="AbortError")return "The request timed out or was cancelled. Check the connection and try again.";
+ if(!navigator.onLine)return "You are offline. Your text remains available, but online translation is unavailable.";
+ return "Unable to connect to the translation service. Check your internet connection, endpoint, and provider CORS settings.";
+}
+async function runTranslation(){
+ const text=sourceText.value.trim(),target=targetLang.value,source=sourceLang.value;
+ if(!text){setMessage($("sourceMessage"),"Please enter some text before translating.","error");sourceText.focus();return;}
+ if(sourceText.value.length>5000){setMessage($("sourceMessage"),"Please keep the text within 5000 characters.","error");return;}
+ if(!language(target)){setMessage($("sourceMessage"),"Please choose a valid destination language.","error");return;}
+ if(!configReady()){setMessage($("sourceMessage"),"Translation service may be unavailable. Check your connection and try again.","error");setMessage($("outputMessage"),"No fake translation was generated. Configure a genuine translation service to continue.","error");return;}
+ if(translationController)translationController.abort();
+ translationController=new AbortController();const mySeq=++requestSequence;translationStartedAt=performance.now();
+ $("translateBtn").disabled=true;$("translateBtn").innerHTML='<span class="spinner" aria-hidden="true"></span> TRANSLATING…';
+ setMessage($("sourceMessage"),"Your translation is in progress…");
+ setMessage($("outputMessage"),"Contacting the configured translation service…");
+ try{
+  const result=await translateText(text,source,target,translationController.signal);
+  if(mySeq!==requestSequence)return;
+  const duration=(performance.now()-translationStartedAt)/1000;
+  const detected=result.detected||(source==="auto"?(lastDetected?.language||null):source);
+  const meta={source:detected,target,original:text,time:Date.now(),duration};
+  lastTranslation={...meta,translated:result.text};
+  renderTranslation(result.text,meta);$("durationText").textContent=`Response time: ${duration.toFixed(2)} seconds`;
+  setMessage($("sourceMessage"),"Translation completed successfully.","success");
+  setMessage($("outputMessage"),"Translation ready. You can copy, listen to, or download it.","success");
+  historyItems.unshift({...lastTranslation});historyItems=historyItems.slice(0,5);renderHistory();
+ }catch(e){
+  if(mySeq!==requestSequence)return;
+  setMessage($("sourceMessage"),errorMessage(e),"error");setMessage($("outputMessage"),"The last successful result, if any, has been preserved.","error");
+ }finally{
+  if(mySeq===requestSequence){$("translateBtn").disabled=false;$("translateBtn").textContent="⚡ TRANSLATE NOW";}
+ }
+}
+function renderHistory(){
+ const host=$("historyList");host.replaceChildren();
+ if(!historyItems.length){const p=document.createElement("div");p.className="small-note";p.textContent="Your successful translations will appear here.";host.appendChild(p);return;}
+ historyItems.forEach((item,index)=>{
+  const b=document.createElement("button");b.type="button";b.className="history-item";
+  const strong=document.createElement("strong");strong.textContent=item.original.slice(0,95)+(item.original.length>95?"…":"");
+  const span=document.createElement("span");span.textContent=`→ ${languageName(item.target)} · ${item.translated.slice(0,90)}${item.translated.length>90?"…":""}`;
+  const time=document.createElement("span");time.textContent=new Date(item.time).toLocaleString();
+  b.append(strong,span,time);b.addEventListener("click",()=>restoreHistory(index));host.appendChild(b);
+ });
+}
+function restoreHistory(i){
+ const item=historyItems[i];if(!item)return;
+ sourceText.value=item.original;targetLang.value=item.target;
+ sourceLang.value=item.source&&language(item.source)?item.source:"auto";
+ updateCounts();scheduleDetection();lastTranslation={...item};renderTranslation(item.translated,item);
+ $("durationText").textContent=`Response time: ${item.duration.toFixed(2)} seconds`;
+ setMessage($("sourceMessage"),"Restored a successful translation from this session.","success");
+ setMessage($("outputMessage"),"History item restored.","success");updateChips();
+}
+async function copyTranslation(){
+ if(!lastTranslation)return;
+ try{
+  if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(lastTranslation.translated);
+  else{
+   const area=document.createElement("textarea");area.value=lastTranslation.translated;area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();
+   const ok=document.execCommand("copy");area.remove();if(!ok)throw new Error("Copy unavailable");
+  }
+  $("copyBtn").textContent="✓ COPIED!";setMessage($("outputMessage"),"Translation copied!","success");
+  setTimeout(()=>$("copyBtn").textContent="▣ COPY",1400);
+ }catch{setMessage($("outputMessage"),"Copy was blocked. Select the translated text and copy it manually.","error");}
+}
+function speakText(){
+ if(!lastTranslation)return;
+ if(!("speechSynthesis" in window)){setMessage($("outputMessage"),"Speech synthesis is not supported in this browser.","error");return;}
+ speechSynthesis.cancel();
+ const utterance=new SpeechSynthesisUtterance(lastTranslation.translated);
+ const lang=language(lastTranslation.target);utterance.lang=lang?.tag||lastTranslation.target;
+ const voices=speechSynthesis.getVoices();const voice=voices.find(v=>v.lang.toLowerCase().startsWith(utterance.lang.toLowerCase()));
+ if(voice)utterance.voice=voice;
+ utterance.onstart=()=>{$("stopBtn").hidden=false;$("listenBtn").textContent="▶ PLAYING…";speaking=true;};
+ utterance.onend=utterance.onerror=()=>{$("stopBtn").hidden=true;$("listenBtn").textContent="▶ LISTEN";speaking=false;};
+ speechSynthesis.speak(utterance);
+ setMessage($("outputMessage"),"Voice availability and pronunciation vary by device and browser.");
+}
+function stopSpeech(){if("speechSynthesis"in window)speechSynthesis.cancel();$("stopBtn").hidden=true;$("listenBtn").textContent="▶ LISTEN";speaking=false;}
+function downloadTranslation(){
+ if(!lastTranslation)return;
+ const source=lastTranslation.source?languageName(lastTranslation.source):"Unknown / automatic detection";
+ const body=`LINGUAFLOW AI — TRANSLATION\n\nOriginal text:\n${lastTranslation.original}\n\nDetected source language: ${source}\nTarget language: ${languageName(lastTranslation.target)}\nTranslated text:\n${lastTranslation.translated}\n\nTranslated at: ${new Date(lastTranslation.time).toLocaleString()}\nResponse time: ${lastTranslation.duration.toFixed(2)} seconds\nCreators: Amin • Theerdha • Abhay\n`;
+ const blob=new Blob(["\\ufeff",body],{type:"text/plain;charset=utf-8"});const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");a.href=url;a.download="linguaflow-translation.txt";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ setMessage($("outputMessage"),"UTF-8 text file prepared for download.","success");
+}
+async function shareTranslation(){
+ if(!lastTranslation)return;
+ try{await navigator.share({title:"LinguaFlow AI Translation",text:lastTranslation.translated});setMessage($("outputMessage"),"Share sheet opened.","success");}
+ catch(e){if(e.name!=="AbortError")setMessage($("outputMessage"),"Sharing is unavailable here. You can copy the translation instead.","error");}
+}
+function clearResult(){
+ lastTranslation=null;$("outputText").textContent="";$("outputText").hidden=true;$("emptyState").hidden=false;$("resultMeta").replaceChildren();$("resultMeta").hidden=true;
+ $("outputWords").textContent="0 translated words";$("durationText").textContent="Response time: —";
+ $("copyBtn").disabled=$("listenBtn").disabled=$("downloadBtn").disabled=true;$("shareBtn").disabled=true;
+ setMessage($("outputMessage"),"Translation output cleared. Your source text is unchanged.");
+}
+function swapLanguages(){
+ const oldSource=sourceLang.value,oldTarget=targetLang.value;
+ if(oldSource==="auto"){
+  if(lastTranslation?.source&&language(lastTranslation.source)){sourceLang.value=oldTarget;targetLang.value=lastTranslation.source;setMessage($("sourceMessage"),"Swapped using the detected source language. Translate again to refresh the result.");}
+  else{setMessage($("sourceMessage"),"A source language has not been detected yet. Choose a source language manually before swapping.","error");return;}
+ }else{sourceLang.value=oldTarget;targetLang.value=oldSource;}
+ updateChips();scheduleDetection();
+ if(lastTranslation){clearResult();setMessage($("sourceMessage"),"Languages swapped. The source text is preserved; translate again for the new language pair.");}
+}
+function openSettings(){if(typeof $("settingsDialog").showModal==="function")$("settingsDialog").showModal();else alert("Settings: edit TRANSLATION_CONFIG in the HTML source to configure the provider.");}
+function init(){
+ fillLanguages();renderChips();updateCounts();updateProviderStatus();
+ $("sourceText").addEventListener("input",()=>{updateCounts();scheduleDetection();});
+ sourceLang.addEventListener("change",()=>{if(sourceLang.value==="auto"){scheduleDetection();$("detectState").textContent="Automatic detection enabled";}else renderDetection(null,true);});
+ targetLang.addEventListener("change",updateChips);
+ $("targetSearch").addEventListener("input",filterTargetLanguages);
+ $("translateBtn").addEventListener("click",runTranslation);
+ $("exampleBtn").addEventListener("click",()=>{sourceText.value="Hello! Welcome to our multilingual language translator.";updateCounts();scheduleDetection();sourceText.focus();});
+ $("clearSourceBtn").addEventListener("click",()=>{sourceText.value="";updateCounts();scheduleDetection();setMessage($("sourceMessage"),"Input cleared.");sourceText.focus();});
+ $("clearResultBtn").addEventListener("click",clearResult);
+ $("copyBtn").addEventListener("click",copyTranslation);$("listenBtn").addEventListener("click",speakText);$("stopBtn").addEventListener("click",stopSpeech);
+ $("downloadBtn").addEventListener("click",downloadTranslation);$("shareBtn").addEventListener("click",shareTranslation);
+ $("swapBtn").addEventListener("click",swapLanguages);
+ $("clearHistoryBtn").addEventListener("click",()=>{historyItems=[];renderHistory();});
+ $("settingsOpen").addEventListener("click",openSettings);$("settingsOpen2").addEventListener("click",openSettings);
+ $("settingsClose").addEventListener("click",()=>$("settingsDialog").close());$("settingsDone").addEventListener("click",()=>$("settingsDialog").close());
+ $("motionToggle").addEventListener("change",e=>document.body.classList.toggle("no-motion",e.target.checked));
+ $("compactToggle").addEventListener("change",e=>{document.documentElement.style.setProperty("--space",e.target.checked?"12px":"20px");document.querySelectorAll(".panel,.section-card").forEach(el=>el.style.padding=e.target.checked?"14px":"");});
+ window.addEventListener("online",()=>setMessage($("sourceMessage"),"Connection detected. Translation still requires a configured endpoint."));
+ window.addEventListener("offline",()=>setMessage($("sourceMessage"),"You are offline. Your text remains available, but online translation is unavailable.","error"));
+ if(!("speechSynthesis"in window)){$("listenBtn").title="Speech synthesis is not supported by this browser.";}
+ updateChips();
+}
+init();
+</script>
+</body>
+</html>
