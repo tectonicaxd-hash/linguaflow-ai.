@@ -1,51 +1,198 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#080b18">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080b18">
 <title>LinguaFlow AI — Neon Language Translator</title>
 <style>
-:root{--bg:#080b18;--text:#f4f6ff;--muted:#9aa6c8;--cyan:#54f4ff;--purple:#a78bfa;--pink:#ff62cf;--green:#6effb2;--danger:#ff8298;--line:#293454}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(ellipse at 15% 0%,#5d37cd40,transparent 38%),radial-gradient(ellipse at 95% 25%,#00d2e626,transparent 35%),var(--bg);overflow-x:hidden}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.15;background-image:linear-gradient(#7f97ff20 1px,transparent 1px),linear-gradient(90deg,#7f97ff20 1px,transparent 1px);background-size:38px 38px}
-.wrap{width:min(1080px,94vw);margin:auto;padding:25px 0;position:relative}.topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:26px}.brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#07101c;font-weight:1000;font-size:22px;box-shadow:0 0 28px #54f4ff40}.brandname{font-size:17px;font-weight:900;letter-spacing:.12em}.brandname span{color:var(--cyan)}.tag{font-size:10px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase}.pill{border:1px solid #758bff38;border-radius:999px;padding:8px 12px;color:#b8c5e9;font-size:10px;letter-spacing:.1em;background:#11172a}
-.hero{text-align:center;margin:16px 0 27px}.eyebrow{display:inline-flex;gap:8px;align-items:center;color:var(--cyan);border:1px solid #54f4ff38;background:#54f4ff0b;border-radius:999px;padding:7px 12px;font-size:10px;letter-spacing:.18em}.dot{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 12px var(--green)}h1{font-size:clamp(35px,6vw,62px);line-height:1.04;letter-spacing:-.055em;margin:17px 0 12px;font-weight:950}h1 span{background:linear-gradient(95deg,var(--cyan),#b6a1ff 53%,var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent}.subtitle{max-width:620px;margin:auto;color:var(--muted);font-size:14px;line-height:1.7}
-.translator{border:1px solid #758bff38;border-radius:25px;padding:clamp(14px,3vw,27px);background:linear-gradient(145deg,#141c35f5,#0b0f1ff5);box-shadow:0 25px 80px #0007;position:relative;overflow:hidden}.translator:before{content:"";position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),var(--purple),transparent)}
-.langbar{display:grid;grid-template-columns:1fr 48px 1fr;gap:11px;align-items:end;margin-bottom:17px}.fieldlabel{display:block;color:var(--muted);font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin:0 0 9px 4px}.selectwrap{position:relative}.selectwrap:after{content:"⌄";position:absolute;right:13px;top:50%;transform:translateY(-55%);color:var(--cyan);pointer-events:none;font-size:19px}select{width:100%;appearance:none;color:var(--text);background:#0b1021;border:1px solid #2a355b;border-radius:13px;padding:14px 35px 14px 12px;font:inherit;font-size:13px;outline:none}select:focus,textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #54f4ff13}.swap{width:46px;height:47px;border:1px solid #514e96;border-radius:14px;background:linear-gradient(145deg,#27234d,#131a34);color:var(--cyan);font-size:22px;cursor:pointer;transition:.2s}.swap:hover{transform:rotate(180deg);border-color:var(--cyan)}
-.panels{display:grid;grid-template-columns:1fr 1fr;gap:13px}.textpanel{border:1px solid var(--line);border-radius:17px;background:#090e1d;overflow:hidden;min-width:0}.panelhead{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;border-bottom:1px solid #222b48;color:#b9c5e8;font-size:11px;letter-spacing:.1em;text-transform:uppercase}.mini{color:#6d7da9;font-size:10px}.textpanel textarea{width:100%;height:195px;resize:vertical;border:0;outline:none;background:transparent;color:var(--text);padding:15px;font:inherit;font-size:15px;line-height:1.65}.textpanel textarea::placeholder{color:#586687}.output{height:195px;overflow:auto;padding:15px;font-size:15px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;color:#e8eaff}.output.empty{color:#586687}.panelbottom{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-top:1px solid #222b48;color:#7180a7;font-size:10px}.smallbtn{border:1px solid #303b60;background:#121a31;color:#b9c7ed;border-radius:9px;padding:7px 10px;font:inherit;cursor:pointer}.smallbtn:hover{border-color:var(--cyan);color:var(--cyan)}
-.actions{display:flex;justify-content:center;gap:11px;flex-wrap:wrap;margin:19px 0 12px}.translatebtn{border:0;border-radius:14px;padding:15px 28px;min-width:210px;color:#07101a;font-weight:900;font-size:14px;background:linear-gradient(100deg,var(--cyan),#9af9ed);box-shadow:0 8px 28px #54f4ff25;cursor:pointer;transition:.2s}.translatebtn:hover{transform:translateY(-2px)}.translatebtn:disabled{opacity:.55;cursor:wait;transform:none}.clearbtn{border:1px solid #303b60;background:#10162b;color:#bac5e5;border-radius:13px;padding:14px 18px;font-weight:700;cursor:pointer}.status{min-height:22px;text-align:center;font-size:12px;color:var(--muted);line-height:1.6}.status.error{color:var(--danger)}.status.success{color:var(--green)}
-.features{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:17px}.feature{border:1px solid #758bff2c;border-radius:15px;background:#11172b8a;padding:14px}.feature strong{display:block;font-size:12px;margin-bottom:5px;color:#dfe5ff}.feature span{display:block;color:var(--muted);font-size:11px;line-height:1.55}.foot{text-align:center;margin:25px 0 0;color:#7582a7;font-size:11px;line-height:1.8}.creators{color:#c9d2f5;letter-spacing:.08em}.trio{display:inline-block;color:var(--cyan);font-size:16px;margin:0 5px}.smallfoot{font-size:10px;color:#596687}
-@media(max-width:700px){.wrap{padding-top:17px}.topline{margin-bottom:19px}.tag{display:none}.pill{font-size:9px;padding:7px 9px}.hero{margin:10px 0 21px}.subtitle{font-size:13px}.langbar{grid-template-columns:1fr 39px 1fr;gap:7px}.swap{width:39px;height:45px;border-radius:12px}select{padding:13px 25px 13px 9px;font-size:11px}.panels{grid-template-columns:1fr}.textpanel textarea,.output{height:155px;min-height:155px}.features{grid-template-columns:1fr}.translatebtn,.clearbtn{width:100%}.actions{gap:9px}}
-</style></head>
-<body><div class="wrap">
-<header class="topline"><div class="brand"><div class="logo">文</div><div><div class="brandname">LINGUA<span>FLOW</span> AI</div><div class="tag">Break language barriers</div></div></div><div class="pill">✦ NEON TRANSLATOR</div></header>
-<section class="hero"><div class="eyebrow"><span class="dot"></span> SIMPLE · FAST · MULTILINGUAL</div><h1>Words connect<br><span>worlds.</span></h1><p class="subtitle">Translate your thoughts into another language with a clean, futuristic workspace built for curious minds.</p></section>
-<main class="translator">
-<div class="langbar"><div><label class="fieldlabel" for="sourceLang">Translate from</label><div class="selectwrap"><select id="sourceLang">
-<option value="en" selected>🇬🇧 English</option><option value="hi">🇮🇳 Hindi</option><option value="ur">🇵🇰 Urdu</option><option value="ar">🇸🇦 Arabic</option><option value="fr">🇫🇷 French</option><option value="es">🇪🇸 Spanish</option><option value="de">🇩🇪 German</option><option value="it">🇮🇹 Italian</option><option value="pt">🇵🇹 Portuguese</option><option value="ru">🇷🇺 Russian</option><option value="zh">🇨🇳 Chinese</option><option value="ja">🇯🇵 Japanese</option><option value="ko">🇰🇷 Korean</option><option value="tr">🇹🇷 Turkish</option><option value="bn">🇧🇩 Bengali</option><option value="ta">🇮🇳 Tamil</option><option value="te">🇮🇳 Telugu</option><option value="ml">🇮🇳 Malayalam</option><option value="nl">🇳🇱 Dutch</option><option value="pl">🇵🇱 Polish</option><option value="uk">🇺🇦 Ukrainian</option><option value="id">🇮🇩 Indonesian</option><option value="vi">🇻🇳 Vietnamese</option><option value="th">🇹🇭 Thai</option><option value="el">🇬🇷 Greek</option><option value="sv">🇸🇪 Swedish</option><option value="cs">🇨🇿 Czech</option><option value="ro">🇷🇴 Romanian</option><option value="fa">🇮🇷 Persian</option><option value="he">🇮🇱 Hebrew</option></select></div></div>
-<button class="swap" id="swapBtn" aria-label="Swap languages" title="Swap languages">⇄</button>
-<div><label class="fieldlabel" for="targetLang">Translate to</label><div class="selectwrap"><select id="targetLang">
-<option value="hi" selected>🇮🇳 Hindi</option><option value="en">🇬🇧 English</option><option value="ur">🇵🇰 Urdu</option><option value="ar">🇸🇦 Arabic</option><option value="fr">🇫🇷 French</option><option value="es">🇪🇸 Spanish</option><option value="de">🇩🇪 German</option><option value="it">🇮🇹 Italian</option><option value="pt">🇵🇹 Portuguese</option><option value="ru">🇷🇺 Russian</option><option value="zh">🇨🇳 Chinese</option><option value="ja">🇯🇵 Japanese</option><option value="ko">🇰🇷 Korean</option><option value="tr">🇹🇷 Turkish</option><option value="bn">🇧🇩 Bengali</option><option value="ta">🇮🇳 Tamil</option><option value="te">🇮🇳 Telugu</option><option value="ml">🇮🇳 Malayalam</option><option value="nl">🇳🇱 Dutch</option><option value="pl">🇵🇱 Polish</option><option value="uk">🇺🇦 Ukrainian</option><option value="id">🇮🇩 Indonesian</option><option value="vi">🇻🇳 Vietnamese</option><option value="th">🇹🇭 Thai</option><option value="el">🇬🇷 Greek</option><option value="sv">🇸🇪 Swedish</option><option value="cs">🇨🇿 Czech</option><option value="ro">🇷🇴 Romanian</option><option value="fa">🇮🇷 Persian</option><option value="he">🇮🇱 Hebrew</option></select></div></div></div>
-<div class="panels"><section class="textpanel"><div class="panelhead"><span>✧ Your text</span><span class="mini">INPUT</span></div><textarea id="inputText" maxlength="5000" placeholder="Type or paste something to translate..."></textarea><div class="panelbottom"><span id="charCount">0 / 5000 characters</span><button class="smallbtn" id="pasteBtn">Paste</button></div></section>
-<section class="textpanel"><div class="panelhead"><span>✦ Translation</span><span class="mini">OUTPUT</span></div><div id="outputText" class="output empty" aria-live="polite">Your translation will appear here...</div><div class="panelbottom"><span id="outputCount">Ready when you are</span><button class="smallbtn" id="copyBtn">Copy result</button></div></section></div>
-<div class="actions"><button class="translatebtn" id="translateBtn">✦ &nbsp; Translate text</button><button class="clearbtn" id="clearBtn">Clear workspace</button></div><div id="status" class="status" role="status">Choose both languages, enter your text, and tap Translate.</div>
+:root{color-scheme:dark;--bg:#080b18;--panel:#10172a;--line:#25334b;--cyan:#22e6ed;--blue:#6a8cff;--text:#f1f5ff;--muted:#a5b1ca;--good:#57e6a7;--bad:#ff718b}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#14213b 0,#080b18 55%);color:var(--text);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+.wrap{width:min(1000px,94vw);margin:auto;padding:24px 0 36px}
+header{text-align:center;padding:28px 12px 24px}
+.logo{display:inline-flex;align-items:center;gap:10px;color:var(--cyan);font-weight:900;letter-spacing:2px;font-size:clamp(25px,5vw,42px)}
+.symbol{display:inline-grid;place-items:center;width:42px;height:42px;border:2px solid var(--cyan);border-radius:13px;box-shadow:0 0 22px #22e6ed35}
+.tag{color:var(--muted);margin:10px auto 0;max-width:620px}
+.pill{display:inline-block;border:1px solid #2c6070;border-radius:99px;padding:5px 12px;color:var(--cyan);font-size:12px;letter-spacing:1.5px;margin-top:15px}
+.panel{background:linear-gradient(145deg,#111a2dF2,#0d1324F2);border:1px solid var(--line);border-radius:24px;padding:clamp(17px,4vw,30px);margin:18px 0;box-shadow:0 18px 55px #0003}
+label{display:block;font-weight:750;margin:0 0 8px}
+select,textarea,input,button{font:inherit}
+select,textarea,input{width:100%;color:var(--text);background:#090f20;border:1px solid #34425b;border-radius:13px;padding:12px;outline:none}
+select:focus,textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #22e6ed19}
+.languages{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px;align-items:end}
+.swap{height:48px;width:48px;border:1px solid #2b6b7c;background:#102438;color:var(--cyan);border-radius:14px;cursor:pointer;font-size:22px}
+.editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:19px}
+textarea{min-height:210px;resize:vertical;line-height:1.6}
+textarea::placeholder{color:#6f7d98}
+.output{background:#0b1222}
+.counter{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:7px;gap:10px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+button.action{border:1px solid #34425b;border-radius:13px;background:#141e33;color:var(--text);padding:11px 15px;cursor:pointer;font-weight:750}
+button.primary{border:0;color:#04111c;background:linear-gradient(100deg,var(--cyan),var(--blue));box-shadow:0 8px 25px #22e6ed20}
+button:disabled{opacity:.55;cursor:wait}
+.status{margin-top:15px;padding:12px 14px;border-radius:12px;background:#0a1222;border:1px solid var(--line);color:var(--muted);overflow-wrap:anywhere}
+.status.good{color:var(--good);border-color:#27654f}.status.bad{color:#ff9cad;border-color:#713345}
+h2{font-size:22px;margin:0 0 10px}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.feature{border:1px solid var(--line);border-radius:16px;padding:16px;background:#11192a}
+.feature b{display:block;color:var(--cyan);margin-bottom:5px}
+.about{color:var(--muted)}
+.credits{text-align:center;letter-spacing:1.5px;font-weight:900;color:var(--cyan);padding:24px 8px 6px}
+.credits small{display:block;color:var(--text);font-size:15px;margin-top:8px;letter-spacing:1px}
+@media(max-width:700px){.editor-grid{grid-template-columns:1fr}.features{grid-template-columns:1fr}.languages{gap:7px}.swap{width:42px;height:46px}.panel{border-radius:20px}textarea{min-height:150px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo"><span class="symbol">文</span> LINGUAFLOW AI</div>
+  <p class="tag">Break language barriers with a clean, neon-powered translation workspace.</p>
+  <span class="pill">STUDENT AI PROJECT · MULTILINGUAL TRANSLATION</span>
+</header>
+
+<main>
+<section class="panel">
+  <div class="languages">
+    <div><label for="sourceLang">Translate from</label><select id="sourceLang">
+      <option value="en">English</option><option value="hi">Hindi</option><option value="ur">Urdu</option><option value="ar">Arabic</option><option value="fr">French</option><option value="de">German</option><option value="es">Spanish</option><option value="it">Italian</option><option value="pt">Portuguese</option><option value="ru">Russian</option><option value="ja">Japanese</option><option value="ko">Korean</option><option value="zh">Chinese</option><option value="bn">Bengali</option><option value="ta">Tamil</option><option value="te">Telugu</option><option value="ml">Malayalam</option><option value="mr">Marathi</option><option value="tr">Turkish</option><option value="nl">Dutch</option><option value="pl">Polish</option><option value="uk">Ukrainian</option><option value="id">Indonesian</option><option value="th">Thai</option><option value="vi">Vietnamese</option><option value="fa">Persian</option><option value="sw">Swahili</option>
+    </select></div>
+    <button class="swap" id="swapBtn" type="button" aria-label="Swap languages" title="Swap languages">⇄</button>
+    <div><label for="targetLang">Translate to</label><select id="targetLang">
+      <option value="hi">Hindi</option><option value="en">English</option><option value="ur">Urdu</option><option value="ar">Arabic</option><option value="fr">French</option><option value="de">German</option><option value="es">Spanish</option><option value="it">Italian</option><option value="pt">Portuguese</option><option value="ru">Russian</option><option value="ja">Japanese</option><option value="ko">Korean</option><option value="zh">Chinese</option><option value="bn">Bengali</option><option value="ta">Tamil</option><option value="te">Telugu</option><option value="ml">Malayalam</option><option value="mr">Marathi</option><option value="tr">Turkish</option><option value="nl">Dutch</option><option value="pl">Polish</option><option value="uk">Ukrainian</option><option value="id">Indonesian</option><option value="th">Thai</option><option value="vi">Vietnamese</option><option value="fa">Persian</option><option value="sw">Swahili</option>
+    </select></div>
+  </div>
+  <div class="editor-grid">
+    <div><label for="sourceText">Your text</label><textarea id="sourceText" maxlength="5000" placeholder="Type or paste text to translate…"></textarea><div class="counter"><span>Input text</span><span id="charCount">0 / 5000</span></div></div>
+    <div><label for="resultText">Translation</label><textarea id="resultText" class="output" placeholder="Your translation will appear here…" readonly></textarea><div class="counter"><span id="resultLabel">Ready to translate</span><span id="resultCount">0 characters</span></div></div>
+  </div>
+  <div class="actions">
+    <button class="action primary" id="translateBtn" type="button">✦ Translate text</button>
+    <button class="action" id="pasteBtn" type="button">Paste</button>
+    <button class="action" id="copyBtn" type="button">Copy result</button>
+    <button class="action" id="clearBtn" type="button">Clear</button>
+  </div>
+  <div class="status" id="status" role="status" aria-live="polite">Ready. Choose languages, enter text, and tap Translate.</div>
+</section>
+
+<section class="panel">
+  <h2>Engine status</h2>
+  <h2 style="font-size:28px;margin-top:4px">Transparent by design.</h2>
+  <p class="about">Provider: LibreTranslate-compatible community services (best-effort). Translation requires an internet connection and a public API that permits browser requests. Availability and supported languages can vary.</p>
+  <div class="status">This is a single-file front end. It does not contain its own AI translation model. Never put private API keys in public HTML.</div>
+</section>
+
+<section class="panel">
+  <h2>Project overview</h2>
+  <p class="about">LinguaFlow AI is a student-created multilingual translation interface developed as part of an Artificial Intelligence holiday homework project. It demonstrates how language selection, machine translation services, user interface design, and browser technologies can work together to support communication across languages.</p>
+  <div class="features">
+    <div class="feature"><b>◇ Manual language choice</b>Select source and target languages yourself.</div>
+    <div class="feature"><b>⇄ Quick swap</b>Switch the source and target languages in one tap.</div>
+    <div class="feature"><b>✦ Simple workflow</b>Translate, copy, paste, or clear text easily.</div>
+  </div>
+  <div class="features" style="margin-top:12px">
+    <div class="feature"><b>△ AMIN</b>Co-Creator</div><div class="feature"><b>◇ THEERDHA</b>Co-Creator</div><div class="feature"><b>▽ ABHAY</b>Co-Creator</div>
+  </div>
+</section>
 </main>
-<section class="features"><div class="feature"><strong>🌐 Languages at your fingertips</strong><span>Choose the source and target language yourself—automatic language detection has been removed.</span></div><div class="feature"><strong>⚡ Simple workflow</strong><span>Enter text, choose languages, translate, then copy the result.</span></div><div class="feature"><strong>🔒 No account in this page</strong><span>Your text is sent to a public translation service. Avoid entering sensitive information.</span></div></section>
-<footer class="foot"><div class="creators">CRAFTED BY THREE LEGENDS <span class="trio">⟡ ∞ ⟡</span></div><div>Amin <span style="color:var(--cyan)">×</span> Theerdha <span style="color:var(--cyan)">×</span> Abhay</div><div class="smallfoot">LINGUAFLOW AI · A student-built language project</div></footer>
+<footer class="credits">⚡ MADE BY THE THREE LEGENDS ⚡<small>AMIN · THEERDHA · ABHAY</small></footer>
 </div>
 <script>
-(()=>{const $=id=>document.getElementById(id),input=$('inputText'),output=$('outputText'),source=$('sourceLang'),target=$('targetLang'),status=$('status'),button=$('translateBtn');
-const endpoints=['https://libretranslate.de/translate','https://translate.argosopentech.com/translate','https://libretranslate.com/translate'];
-function setStatus(msg,type=''){status.textContent=msg;status.className='status'+(type?' '+type:'')}
-function counts(){$('charCount').textContent=`${input.value.length} / 5000 characters`;$('outputCount').textContent=output.classList.contains('empty')?'Ready when you are':`${output.textContent.length} characters`}
-input.addEventListener('input',counts);
-async function callAPI(url,text,src,dest){const body=new URLSearchParams({q:text,source:src,target:dest,format:'text'}),controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);try{const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:body.toString(),signal:controller.signal});const raw=await res.text();let data;try{data=JSON.parse(raw)}catch{data={error:raw||`HTTP ${res.status}`}}if(!res.ok)throw Error(data.error||`HTTP ${res.status}`);if(data.error)throw Error(data.error);if(typeof data.translatedText!=='string'||!data.translatedText.trim())throw Error('Empty translation returned');return data.translatedText}finally{clearTimeout(timer)}}
-button.addEventListener('click',async()=>{const text=input.value.trim(),src=source.value,dest=target.value;if(!text){setStatus('Please enter some text first.','error');input.focus();return}if(src===dest){output.textContent=text;output.classList.remove('empty');counts();setStatus('Both languages are the same, so the original text is shown.','success');return}
-button.disabled=true;button.textContent='⟳  Translating...';setStatus('Connecting to a translation service…');let error='Connection failed';
-for(const url of endpoints){try{const result=await callAPI(url,text,src,dest);output.textContent=result;output.classList.remove('empty');counts();setStatus(`Translation complete · ${src.toUpperCase()} → ${dest.toUpperCase()}`,'success');button.disabled=false;button.innerHTML='✦ &nbsp; Translate text';return}catch(e){error=e.message||error}}
-setStatus('Could not connect to the available translation services. Try again later. Details: '+error,'error');button.disabled=false;button.innerHTML='✦ &nbsp; Translate text'});
-$('swapBtn').addEventListener('click',()=>{const s=source.value;source.value=target.value;target.value=s;if(!output.classList.contains('empty')){const old=output.textContent;output.textContent=input.value;input.value=old;output.classList.remove('empty');counts()}setStatus('Languages swapped. Check the text before translating again.')});
-$('clearBtn').addEventListener('click',()=>{input.value='';output.textContent='Your translation will appear here...';output.classList.add('empty');counts();setStatus('Workspace cleared.')});
-$('copyBtn').addEventListener('click',async()=>{if(output.classList.contains('empty'))return setStatus('There is no translation to copy yet.','error');try{await navigator.clipboard.writeText(output.textContent);setStatus('Translation copied to clipboard.','success')}catch{setStatus('Copy was blocked. Select the result and copy it manually.','error')}});
-$('pasteBtn').addEventListener('click',async()=>{try{input.value=await navigator.clipboard.readText();counts();setStatus('Text pasted.','success')}catch{setStatus('Paste permission was blocked. Tap the text box and paste normally.','error');input.focus()}});
-counts()})();
-</script></body></html>
+/*
+ * Translation uses public, best-effort LibreTranslate-compatible endpoints.
+ * Public endpoints can change, rate-limit requests, or block browser CORS.
+ * No API keys are included in this public file.
+ */
+const TRANSLATION_CONFIG = {
+  endpoints: [
+    "https://libretranslate.de/translate",
+    "https://translate.argosopentech.com/translate",
+    "https://libretranslate.com/translate"
+  ],
+  timeoutMs: 12000
+};
+const $ = id => document.getElementById(id);
+const sourceLang = $("sourceLang"), targetLang = $("targetLang");
+const sourceText = $("sourceText"), resultText = $("resultText");
+const translateBtn = $("translateBtn"), statusBox = $("status");
+function setStatus(message, kind="") {
+  statusBox.textContent = message;
+  statusBox.className = "status" + (kind ? " " + kind : "");
+}
+$("charCount").textContent = "0 / 5000";
+sourceText.addEventListener("input", () => $("charCount").textContent = `${sourceText.value.length} / 5000`);
+resultText.addEventListener("input", () => $("resultCount").textContent = `${resultText.value.length} characters`);
+$("swapBtn").addEventListener("click", () => {
+  const old = sourceLang.value; sourceLang.value = targetLang.value; targetLang.value = old;
+  const text = sourceText.value; sourceText.value = resultText.value; resultText.value = text;
+  $("charCount").textContent = `${sourceText.value.length} / 5000`;
+  $("resultCount").textContent = `${resultText.value.length} characters`;
+});
+$("clearBtn").addEventListener("click", () => {
+  sourceText.value = ""; resultText.value = "";
+  $("charCount").textContent = "0 / 5000"; $("resultCount").textContent = "0 characters";
+  $("resultLabel").textContent = "Ready to translate"; setStatus("Cleared. Enter new text when ready.");
+  sourceText.focus();
+});
+$("copyBtn").addEventListener("click", async () => {
+  if (!resultText.value) { setStatus("There is no translation to copy yet.", "bad"); return; }
+  try {
+    await navigator.clipboard.writeText(resultText.value);
+    setStatus("Translation copied to clipboard.", "good");
+  } catch {
+    resultText.focus(); resultText.select();
+    const ok = document.execCommand("copy");
+    setStatus(ok ? "Translation copied." : "Copy is blocked by this browser. Select the result and copy it manually.", ok ? "good" : "bad");
+  }
+});
+$("pasteBtn").addEventListener("click", async () => {
+  try {
+    sourceText.value = await navigator.clipboard.readText();
+    $("charCount").textContent = `${sourceText.value.length} / 5000`;
+    setStatus("Text pasted.", "good");
+  } catch { setStatus("Clipboard access was blocked. Long-press the text box and choose Paste.", "bad"); }
+});
+async function translateWithEndpoint(endpoint, text, source, target, signal) {
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: {"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},
+    body: new URLSearchParams({q:text, source, target, format:"text"}).toString(),
+    signal
+  });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  const data = await response.json();
+  if (typeof data.translatedText !== "string" || !data.translatedText.trim()) throw new Error("Unexpected API response");
+  return data.translatedText;
+}
+translateBtn.addEventListener("click", async () => {
+  const text = sourceText.value.trim();
+  if (!text) { setStatus("Please enter some text first.", "bad"); sourceText.focus(); return; }
+  if (sourceLang.value === targetLang.value) { setStatus("Choose two different languages.", "bad"); return; }
+  translateBtn.disabled = true; translateBtn.textContent = "Translating…";
+  resultText.value = ""; $("resultCount").textContent = "0 characters"; $("resultLabel").textContent = "Trying translation services…";
+  const errors = [];
+  try {
+    for (const endpoint of TRANSLATION_CONFIG.endpoints) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), TRANSLATION_CONFIG.timeoutMs);
+      try {
+        setStatus(`Trying provider ${TRANSLATION_CONFIG.endpoints.indexOf(endpoint)+1} of ${TRANSLATION_CONFIG.endpoints.length}…`);
+        const translated = await translateWithEndpoint(endpoint, text, sourceLang.value, targetLang.value, controller.signal);
+        resultText.value = translated;
+        $("resultCount").textContent = `${translated.length} characters`;
+        $("resultLabel").textContent = "Translation complete";
+        setStatus("Translation completed successfully.", "good");
+        return;
+      } catch (error) {
+        errors.push(`${new URL(endpoint).hostname}: ${error.name === "AbortError" ? "timed out" : error.message}`);
+      } finally { clearTimeout(timeout); }
+    }
+    $("resultLabel").textContent = "Translation unavailable";
+    setStatus("None of the public translation services responded successfully. This may be a network, server, rate-limit, or browser CORS issue. Details: " + errors.join(" · "), "bad");
+  } finally {
+    translateBtn.disabled = false; translateBtn.textContent = "✦ Translate text";
+  }
+});
+</script>
+</body>
+</html>
