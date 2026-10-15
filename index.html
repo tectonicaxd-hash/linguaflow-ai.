@@ -4,54 +4,30 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#080b18">
-<title>LinguaFlow AI — Offline Multilingual Phrasebook</title>
+<title>LinguaFlow Offline — Instant Phrase Translator</title>
 <style>
-:root{color-scheme:dark;--bg:#050914;--panel:#0a1225;--panel2:#0d1931;--line:#18375a;--cyan:#42f5f5;--blue:#388bff;--violet:#a56bff;--text:#f3f7ff;--muted:#91a6c7;--green:#5df0b2}
-*{box-sizing:border-box}
-body{margin:0;min-height:100vh;color:var(--text);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(ellipse at 12% 0%,#102d55 0,transparent 34%),radial-gradient(ellipse at 95% 28%,#25104b 0,transparent 29%),linear-gradient(145deg,#030611,#060b1a 55%,#08091a)}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;background-image:linear-gradient(#24436a 1px,transparent 1px),linear-gradient(90deg,#24436a 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,#000,transparent 85%)}
-.wrap{position:relative;width:min(1200px,94vw);margin:auto;padding:24px 0 30px}
-header{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:18px 4px 24px;border-bottom:1px solid #17365b}
-.brand{display:flex;align-items:center;gap:14px}.logo-mark{display:grid;place-items:center;width:58px;height:58px;border-radius:18px;background:linear-gradient(145deg,#0d2947,#171338);border:1px solid #2876a8;box-shadow:0 0 30px #16cde51c;color:var(--cyan);font-size:30px}
-.logo{font-size:clamp(24px,4vw,38px);font-weight:900;letter-spacing:-1.4px;background:linear-gradient(90deg,#53f7f3,#76a9ff 55%,#c18bff);-webkit-background-clip:text;background-clip:text;color:transparent}
-.subtitle{margin:2px 0 0;color:var(--muted);font-size:13px}.tag{white-space:nowrap;border:1px solid #245d70;color:#79f7f3;background:#0b2730a8;border-radius:99px;padding:8px 13px;font-size:10px;font-weight:800;letter-spacing:1.2px}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 275px;gap:18px;margin-top:22px;align-items:start}
-.panel{background:linear-gradient(145deg,#0b162ceF,#080f20f5);border:1px solid #1b3d61;border-radius:22px;padding:clamp(16px,2.5vw,27px);box-shadow:0 20px 60px #0005,inset 0 1px #ffffff08}
-.translator{border-color:#235f82;box-shadow:0 0 0 1px #1b436326,0 20px 60px #0005}
-.languages{display:grid;grid-template-columns:minmax(0,1fr) 54px minmax(0,1fr);gap:12px;align-items:end}
-label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:1.4px;font-weight:850;color:#9bb7da;margin:0 0 9px}
-select,textarea,button{font:inherit}
-select,textarea{width:100%;background:linear-gradient(140deg,#09152b,#071021);border:1px solid #294667;border-radius:14px;color:var(--text);padding:13px 14px;outline:none}
-select{min-height:50px;font-weight:700}
-textarea{min-height:190px;resize:vertical;line-height:1.7;font-size:16px}
-textarea::placeholder{color:#647c9f}
-textarea:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #42f5f51b}
-.swap{height:50px;width:54px;border-radius:16px;background:linear-gradient(145deg,#0e2a47,#18143c);border:1px solid #276a91;color:var(--cyan);font-size:26px;cursor:pointer;transition:.2s}
-.swap:hover{transform:rotate(180deg);box-shadow:0 0 24px #37e4ee20}
-.editors{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:22px}
-.editor-card{min-width:0}.output{background:linear-gradient(140deg,#0b1730,#0a1023);border-color:#3b3b81}
-.meta{display:flex;justify-content:space-between;gap:8px;color:#7890b5;font-size:11px;margin-top:7px}
-.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
-button.action{cursor:pointer;border:1px solid #294565;border-radius:12px;background:#101f38;color:#eaf3ff;font-weight:800;padding:12px 16px;transition:transform .15s,border-color .15s}
-button.action:hover{transform:translateY(-1px);border-color:#52dfe8}
-button.primary{background:linear-gradient(100deg,#3ff2e8,#5599ff 58%,#b06bff);color:#07101f;border:0;box-shadow:0 8px 28px #4e9eff22}
-.status{padding:12px 14px;border:1px solid #1b3a5d;border-radius:12px;margin-top:15px;color:#a7b8d3;background:#071020;font-size:13px}
-.status.good{color:var(--green);border-color:#28634e}.status.warn{color:#ffd28b;border-color:#705629}
-h2{font-size:16px;letter-spacing:-.2px;margin:0 0 7px}.muted{color:var(--muted);font-size:13px}
-.side-title{display:flex;align-items:center;gap:9px;color:#b8d5ff;margin-bottom:14px}.lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.lang-pill{font-size:11px;color:#c9d9f2;background:#0b1930;border:1px solid #1d3859;border-radius:9px;padding:7px 8px}
-.feature-list{display:grid;gap:10px;margin-top:15px}.feature{display:flex;gap:10px;align-items:flex-start;padding:12px;border-radius:13px;background:#0a1730;border:1px solid #183657}.feature-icon{color:var(--cyan);font-size:19px}
-.example-list{display:flex;flex-wrap:wrap;gap:8px}.example{border:1px solid #25466b;background:#0c1a31;color:#dbe9ff;border-radius:99px;padding:8px 12px;cursor:pointer;font-size:12px}.example:hover{border-color:var(--cyan)}
-.lower{margin-top:18px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{padding:15px;border:1px solid #1a3a5d;border-radius:15px;background:#09152a}.stat b{display:block;color:var(--cyan);font-size:18px}.credits{text-align:center;padding:25px 8px 12px;color:#70edf2;font-weight:900;letter-spacing:1.5px;font-size:12px}.credits small{display:block;color:#9eb2d1;letter-spacing:1.4px;font-size:12px;margin-top:6px}
-@media(max-width:850px){.layout{grid-template-columns:1fr}.side-panel{order:2}header{align-items:flex-start;flex-direction:column}.tag{white-space:normal}}
-@media(max-width:600px){.editors{grid-template-columns:1fr}.languages{grid-template-columns:minmax(0,1fr) 43px minmax(0,1fr);gap:7px}.swap{width:43px;height:47px}textarea{min-height:140px}.stats{grid-template-columns:1fr}.logo-mark{width:48px;height:48px}.panel{border-radius:17px}}
+:root{color-scheme:dark;--bg:#080b18;--panel:#11182b;--line:#293752;--cyan:#35e8ef;--violet:#8b83ff;--text:#f3f6ff;--muted:#aab5cc;--green:#5be5ae}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#192747 0,#080b18 60%);color:var(--text);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+.wrap{width:min(1000px,94vw);margin:auto;padding:20px 0 30px}header{text-align:center;padding:26px 10px}
+.logo{font-size:clamp(25px,5vw,42px);font-weight:950;letter-spacing:1.5px;color:var(--cyan);text-shadow:0 0 24px #35e8ef36}.logo span{display:inline-grid;place-items:center;width:43px;height:43px;border:2px solid var(--cyan);border-radius:14px;margin-right:8px}
+.subtitle{max-width:680px;margin:10px auto;color:var(--muted)}.tag{display:inline-block;border:1px solid #2d6775;color:var(--cyan);border-radius:99px;padding:5px 12px;font-size:11px;letter-spacing:1.5px;margin-top:8px}
+.panel{background:#11182bed;border:1px solid var(--line);border-radius:22px;padding:clamp(16px,3vw,28px);margin:16px 0;box-shadow:0 18px 55px #0003}
+.languages{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:end}label{display:block;font-weight:800;margin:0 0 8px}select,textarea,button{font:inherit}
+select,textarea{width:100%;background:#090f20;border:1px solid #34435f;border-radius:13px;color:var(--text);padding:12px;outline:none}
+textarea{min-height:170px;resize:vertical;line-height:1.65}textarea:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #35e8ef18}.swap{height:47px;width:47px;border-radius:14px;background:#102438;border:1px solid #2b687b;color:var(--cyan);font-size:23px;cursor:pointer}
+.editors{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}.output{background:#0b1222}.meta{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:12px;margin-top:6px}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}button.action{cursor:pointer;border:1px solid #35435d;border-radius:12px;background:#17223a;color:var(--text);font-weight:800;padding:11px 15px}button.primary{background:linear-gradient(100deg,var(--cyan),var(--violet));color:#08101d;border:0}
+.status{padding:12px 14px;border:1px solid var(--line);border-radius:12px;margin-top:15px;color:var(--muted);background:#0a1120}.status.good{color:var(--green);border-color:#28634e}.status.warn{color:#ffd28b;border-color:#705629}
+h2{font-size:21px;margin:0 0 9px}.muted{color:var(--muted)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{padding:14px;border:1px solid var(--line);border-radius:15px;background:#0d1425}.stat b{display:block;color:var(--cyan);font-size:19px}.example-list{display:flex;flex-wrap:wrap;gap:8px}.example{border:1px solid #34435f;background:#0d1425;color:#e5ecff;border-radius:99px;padding:7px 11px;cursor:pointer;font-size:13px}.credits{text-align:center;padding:20px 8px;color:var(--cyan);font-weight:950;letter-spacing:1.4px}.credits small{display:block;color:var(--text);letter-spacing:1px;font-size:14px;margin-top:5px}
+@media(max-width:680px){.editors{grid-template-columns:1fr}.languages{gap:7px}.swap{width:42px;height:44px}textarea{min-height:135px}.stats{grid-template-columns:1fr}}
 </style>
 </head>
 <body><div class="wrap">
-<header><div class="brand"><div class="logo-mark">文</div><div><div class="logo">LinguaFlow AI</div><p class="subtitle">One world. Many languages. One beautifully simple workspace.</p></div></div>
-<div class="tag">20 LANGUAGES · OFFLINE PHRASEBOOK</div></header>
-<div class="layout"><main>
-<section class="panel translator">
+<header><div class="logo"><span>文</span>LINGUAFLOW OFFLINE</div>
+<p class="subtitle">An expanded instant, offline phrasebook translator. No API key. No server. No external website calls.</p>
+<div class="tag">SELF-CONTAINED · WORKS WITHOUT INTERNET · 20 LANGUAGES</div></header>
+
+<section class="panel">
 <div class="languages">
 <div><label for="src">Translate from</label><select id="src"><option value="en">English</option><option value="hi">Hindi · हिन्दी</option><option value="es">Spanish · Español</option><option value="fr">French · Français</option><option value="de">German · Deutsch</option><option value="ar">Arabic · العربية</option><option value="bn">Bengali · বাংলা</option><option value="pt">Portuguese · Português</option><option value="ru">Russian · Русский</option><option value="ja">Japanese · 日本語</option><option value="ko">Korean · 한국어</option><option value="zh">Chinese (Simplified) · 中文</option><option value="it">Italian · Italiano</option><option value="nl">Dutch · Nederlands</option><option value="tr">Turkish · Türkçe</option><option value="id">Indonesian · Bahasa Indonesia</option><option value="ur">Urdu · اردو</option><option value="pa">Punjabi · ਪੰਜਾਬੀ</option><option value="ta">Tamil · தமிழ்</option><option value="te">Telugu · తెలుగు</option></select></div>
 <button class="swap" id="swap" title="Swap languages" aria-label="Swap languages">⇄</button>
@@ -65,9 +41,8 @@ h2{font-size:16px;letter-spacing:-.2px;margin:0 0 7px}.muted{color:var(--muted);
 <div class="status" id="status" role="status" aria-live="polite">Ready. This translator uses a built-in phrase and vocabulary dataset.</div>
 </section>
 
-<section class="panel lower"><h2>⚡ Quick-start phrases</h2><p class="muted">Tap an example to load it into the text box.</p><div class="example-list" id="examples"></div></section>
-</main><aside class="panel side-panel"><h2 class="side-title">◎ Supported languages</h2><div class="lang-grid"><div class="lang-pill">English</div><div class="lang-pill">Hindi</div><div class="lang-pill">Spanish</div><div class="lang-pill">French</div><div class="lang-pill">German</div><div class="lang-pill">Arabic</div><div class="lang-pill">Bengali</div><div class="lang-pill">Portuguese</div><div class="lang-pill">Russian</div><div class="lang-pill">Japanese</div><div class="lang-pill">Korean</div><div class="lang-pill">Chinese (Simplified)</div><div class="lang-pill">Italian</div><div class="lang-pill">Dutch</div><div class="lang-pill">Turkish</div><div class="lang-pill">Indonesian</div><div class="lang-pill">Urdu</div><div class="lang-pill">Punjabi</div><div class="lang-pill">Tamil</div><div class="lang-pill">Telugu</div></div><div class="feature-list"><div class="feature"><span class="feature-icon">ϟ</span><div><b>Works offline</b><div class="muted">No API key or network request.</div></div></div><div class="feature"><span class="feature-icon">◇</span><div><b>Privacy first</b><div class="muted">Your text stays in this file.</div></div></div><div class="feature"><span class="feature-icon">✦</span><div><b>Made by three legends</b><div class="muted">Amin · Theerdha · Abhay</div></div></div></div></aside></div>
-<section class="panel lower"><h2>What this offline translator can do</h2>
+<section class="panel"><h2>⚡ Try an example</h2><p class="muted">Tap an example to load it into the text box.</p><div class="example-list" id="examples"></div></section>
+<section class="panel"><h2>What this offline translator can do</h2>
 <div class="stats"><div class="stat"><b>20 languages</b><span class="muted">English, Hindi, Spanish, French, German, Arabic, Bengali, Portuguese, Russian, Japanese, Korean, Chinese, Italian, Dutch, Turkish, Indonesian, Urdu, Punjabi, Tamil and Telugu</span></div><div class="stat"><b>Instant</b><span class="muted">All processing happens in this HTML file</span></div><div class="stat"><b>Offline</b><span class="muted">No API keys, paid plans, or network requests</span></div></div>
 <p class="muted" style="margin-bottom:0;margin-top:15px"><strong>Honest limitation:</strong> this is a compact phrasebook translator, not a full AI or neural machine-translation model. It can translate phrases and words included in its embedded dataset, including common slang such as “bro” → “भाई” in Hindi. The added languages have a smaller curated phrase set; many sentences and words will not be covered. Unknown sentences may be only partly translated or remain unchanged. Natural language grammar, idioms, and long paragraphs won't always be correct.</p></section>
 <footer class="credits">⚡ MADE BY THE THREE LEGENDS ⚡<small>AMIN · THEERDHA · ABHAY</small></footer>
@@ -176,55 +151,37 @@ const expandedRows = [...allRows, ...multilingualRows];
 function norm(s){return s.toLocaleLowerCase().normalize("NFC").replace(/[¿¡]/g,"").replace(/[.!?,;:؟،]+$/g,"").trim().replace(/\s+/g," ")}
 function escapeReg(s){return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}
 function buildPhraseMap(from,to){
- const m=new Map(), i=langs.indexOf(from), j=langs.indexOf(to);
- if(i<0||j<0)return m;
- for(const row of expandedRows){if(row[i]&&row[j])m.set(norm(row[i]),row[j]);}
+ const m=new Map();
+ for(const row of expandedRows){const a=row[langs.indexOf(from)+0]; /* indexes below are language indexes */
+   const i=langs.indexOf(from),j=langs.indexOf(to); if(i>=0&&j>=0&&row[i]&&row[j])m.set(norm(row[i]),row[j]);}
  return m;
 }
 function translateLocal(text,from,to){
  if(from===to)return {text,matched:true,all:true};
  const i=langs.indexOf(from),j=langs.indexOf(to);
- if(i<0||j<0)return {text:"Unsupported language selection.",matched:false,all:false};
- const direct=expandedRows.map(row=>({a:row[i],b:row[j]}))
+ const rows=expandedRows.map(row=>({a:row[i],b:row[j]}))
    .filter(x=>x.a&&x.b)
    .sort((x,y)=>y.a.length-x.a.length);
- const exact=direct.find(x=>norm(x.a)===norm(text));
+ const normalized=norm(text);
+ const exact=rows.find(x=>norm(x.a)===normalized);
  if(exact)return {text:matchCaseAndPunct(text,exact.b),matched:true,all:true};
- const directResult=replaceKnown(text,direct);
- if(directResult.count)return {text:directResult.text,matched:true,all:false};
-
- // For language pairs without a direct row, try a two-step phrasebook pivot through English.
- const enIndex=langs.indexOf("en");
- if(from!=="en"&&to!=="en"){
-   const toEnglish=expandedRows.map(row=>({a:row[i],b:row[enIndex]})).filter(x=>x.a&&x.b).sort((x,y)=>y.a.length-x.a.length);
-   const fromEnglish=expandedRows.map(row=>({a:row[enIndex],b:row[j]})).filter(x=>x.a&&x.b).sort((x,y)=>y.a.length-x.a.length);
-   const first=replaceKnown(text,toEnglish);
-   if(first.count){
-     const second=replaceKnown(first.text,fromEnglish);
-     if(second.count)return {text:second.text,matched:true,all:false};
-     return {text:first.text,matched:true,all:false};
-   }
- }
- return {text:"No matching phrase found yet. Try a shorter common phrase.\\n\\nOriginal: "+text,matched:false,all:false};
-}
-function replaceKnown(text,rows){
- if(!rows.length)return {text,count:0};
+ // One combined expression matches only the original input, never translated output.
  const lookup=new Map(rows.map(x=>[norm(x.a),x.b]));
  const alternatives=rows.map(x=>escapeReg(x.a)).join("|");
- // Unicode-aware boundaries; use original text only so translated words are never reprocessed.
- const re=new RegExp("(^|[^\\\\p{L}\\\\p{N}])("+alternatives+")(?=$|[^\\\\p{L}\\\\p{N}])","giu");
+ const re=new RegExp("(^|[^\\p{L}\\p{N}])("+alternatives+")(?=$|[^\\p{L}\\p{N}])","giu");
  let count=0;
- const result=text.replace(re,(whole,prefix,found)=>{
+ const remaining=text.replace(re,(whole,prefix,found)=>{
    const translated=lookup.get(norm(found));
    if(!translated)return whole;
    count++;
    return prefix+matchCaseAndPunct(found,translated);
  });
- return {text:result,count};
+ if(!count)return {text:"[Not in offline phrasebook] "+text,matched:false,all:false};
+ return {text:remaining,matched:true,all:false};
 }
 function matchCaseAndPunct(original,translated){
  if(original===original.toUpperCase()&&/[A-ZÀ-Þ]/.test(original))return translated.toLocaleUpperCase();
- if(original[0]===original[0].toUpperCase() && original[0]!==original[0].toLowerCase())return translated.charAt(0).toLocaleUpperCase()+translated.slice(1);
+ if(original[0]===original[0].toUpperCase())return translated.charAt(0).toLocaleUpperCase()+translated.slice(1);
  return translated;
 }
 const input=document.getElementById("input"),output=document.getElementById("output"),src=document.getElementById("src"),dst=document.getElementById("dst"),status=document.getElementById("status");
